@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Task::all();
+        $query = Task::query();
+
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->has('due_date')) {
+            $query->whereDate('due_date', $request->input('due_date'));
+        }
+
+        return response()->json($query->get(), 200);
     }
 
     public function store(Request $request)
