@@ -19,6 +19,7 @@ class Task extends Model
         'description',
         'status',
         'due_date',
+        'user_id'
     ];
 
     const STATUS_PENDING = 'pending';
@@ -35,5 +36,10 @@ class Task extends Model
         self::STATUS_IN_PROGRESS,
         self::STATUS_COMPLETED,
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
 

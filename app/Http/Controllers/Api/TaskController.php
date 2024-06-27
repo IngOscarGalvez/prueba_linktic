@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Task::query();
+        $query = Task::with('user');
 
         if ($request->has('status')) {
             $query->where('status', $request->input('status'));
@@ -32,7 +33,14 @@ class TaskController extends Controller
             'due_date' => 'required|date',
         ]);
 
-        $task = Task::create($request->all());
+
+        $task = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'due_date' => $request->due_date,
+            'user_id' => Auth::id()
+        ]);
 
         return response()->json($task, 201);
     }
